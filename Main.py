@@ -13,6 +13,22 @@ import tensorflow as tf
 import argparse
 import sys
 
+import serial as Serial
+import pygame
+import time
+
+ser = serial.Serial('/dev/ttyACM0', 9600) #어떤식으로 오는지 확인 필요
+'''
+----아두이노 기본 코드 ----
+void setup(){
+    serial.begin(9600);
+}
+void loop(){
+    Serial.println("hello Pi");
+    delay(1000);
+}
+'''
+
 # Set up camera constants
 IM_WIDTH = 1280
 IM_HEIGHT = 720
