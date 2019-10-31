@@ -1,8 +1,7 @@
 # 소프트웨어 동아리 경진대회 제출용 Main Python 파일
 # 파일 이름: Object_detection_picamera.py
 # 제작: 장현서(kelvin926@naver.com
-# 최종 제작일: 19.11.1 TEST
-#
+# 최종 제작일: 19.11.1
 # Original Code Made by Evan(EdjeElectronics)
 # Import packages
 import os
