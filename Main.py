@@ -4,6 +4,8 @@
 # 최종 제작일: 19.11.1 (Ver 1.0)
 # Original Code Made by Evan(EdjeElectronics)
 # Import packages
+from utils import visualization_utils as vis_util
+from utils import label_map_util
 import os
 import cv2
 import numpy as np
@@ -17,7 +19,7 @@ import serial as Serial
 import pygame
 import time
 
-ser = serial.Serial('/dev/ttyACM0', 9600) #어떤식으로 오는지 확인 필요
+ser = serial.Serial('/dev/ttyACM0', 9600)  # 어떤식으로 오는지 확인 필요
 '''
 ----아두이노 기본 코드 ----
 void setup(){
@@ -32,8 +34,8 @@ void loop(){
 # Set up camera constants
 IM_WIDTH = 1280
 IM_HEIGHT = 720
-#IM_WIDTH = 640    Use smaller resolution for
-#IM_HEIGHT = 480   slightly faster framerate
+# IM_WIDTH = 640    Use smaller resolution for
+# IM_HEIGHT = 480   slightly faster framerate
 
 # Select camera type (if user enters --usbcam when calling this script,
 # a USB webcam will be used)
@@ -49,8 +51,6 @@ if args.usbcam:
 sys.path.append('..')
 
 # Import utilites
-from utils import label_map_util
-from utils import visualization_utils as vis_util
 
 # Name of the directory containing the object detection module we're using
 MODEL_NAME = 'ssdlite_mobilenet_v2_coco_2018_05_09'
@@ -60,21 +60,22 @@ CWD_PATH = os.getcwd()
 
 # Path to frozen detection graph .pb file, which contains the model that is used
 # for object detection.
-PATH_TO_CKPT = os.path.join(CWD_PATH,MODEL_NAME,'frozen_inference_graph.pb')
+PATH_TO_CKPT = os.path.join(CWD_PATH, MODEL_NAME, 'frozen_inference_graph.pb')
 
 # Path to label map file
-PATH_TO_LABELS = os.path.join(CWD_PATH,'data','mscoco_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join(CWD_PATH, 'data', 'mscoco_label_map.pbtxt')
 
 # Number of classes the object detector can identify
 NUM_CLASSES = 90
 
-## Load the label map.
+# Load the label map.
 # Label maps map indices to category names, so that when the convolution
 # network predicts `5`, we know that this corresponds to `airplane`.
 # Here we use internal utility functions, but anything that returns a
 # dictionary mapping integers to appropriate string labels would be fine
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
-categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
+categories = label_map_util.convert_label_map_to_categories(
+    label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
 # Load the Tensorflow model into memory.
@@ -123,12 +124,12 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 if camera_type == 'picamera':
     # Initialize Picamera and grab reference to the raw capture
     camera = PiCamera()
-    camera.resolution = (IM_WIDTH,IM_HEIGHT)
+    camera.resolution = (IM_WIDTH, IM_HEIGHT)
     camera.framerate = 10
-    rawCapture = PiRGBArray(camera, size=(IM_WIDTH,IM_HEIGHT))
+    rawCapture = PiRGBArray(camera, size=(IM_WIDTH, IM_HEIGHT))
     rawCapture.truncate(0)
 
-    for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
+    for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
         t1 = cv2.getTickCount()
 
@@ -154,14 +155,15 @@ if camera_type == 'picamera':
             line_thickness=8,
             min_score_thresh=0.40)
 
-        cv2.putText(frame,"FPS: {0:.2f}".format(frame_rate_calc),(30,50),font,1,(255,255,0),2,cv2.LINE_AA)
+        cv2.putText(frame, "FPS: {0:.2f}".format(
+            frame_rate_calc), (30, 50), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
 
         # All the results have been drawn on the frame, so it's time to display it.
         cv2.imshow('Object detector', frame)
 
         t2 = cv2.getTickCount()
-        time1 = (t2-t1)/freq
-        frame_rate_calc = 1/time1
+        time1 = (t2 - t1) / freq
+        frame_rate_calc = 1 / time1
 
         # Press 'q' to quit
         if cv2.waitKey(1) == ord('q'):
@@ -175,8 +177,8 @@ if camera_type == 'picamera':
 elif camera_type == 'usb':
     # Initialize USB webcam feed
     camera = cv2.VideoCapture(0)
-    ret = camera.set(3,IM_WIDTH)
-    ret = camera.set(4,IM_HEIGHT)
+    ret = camera.set(3, IM_WIDTH)
+    ret = camera.set(4, IM_HEIGHT)
 
     while(True):
 
@@ -203,14 +205,15 @@ elif camera_type == 'usb':
             line_thickness=8,
             min_score_thresh=0.85)
 
-        cv2.putText(frame,"FPS: {0:.2f}".format(frame_rate_calc),(30,50),font,1,(255,255,0),2,cv2.LINE_AA)
+        cv2.putText(frame, "FPS: {0:.2f}".format(
+            frame_rate_calc), (30, 50), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
 
         # All the results have been drawn on the frame, so it's time to display it.
         cv2.imshow('Object detector', frame)
 
         t2 = cv2.getTickCount()
-        time1 = (t2-t1)/freq
-        frame_rate_calc = 1/time1
+        time1 = (t2 - t1) / freq
+        frame_rate_calc = 1 / time1
 
         # Press 'q' to quit
         if cv2.waitKey(1) == ord('q'):
