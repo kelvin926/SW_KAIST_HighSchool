@@ -2,4 +2,4 @@
 ==============================
 1. 소개
 -------
-블랙박스 통합 장치를 위한 Python으로 이루어진 소스입니다. Evan(EdjeElectronics)의 소스를 참고하였으며, OpenCv와 Tesorflow를 사용하였습니다.
+블랙박스 통합 장치를 위한 Python으로 이루어진 소스입니다. Evan(EdjeElectronics)의 소스를 참고하였으며, OpenCv와 Tensorflow를 사용하였습니다.
