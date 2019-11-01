@@ -28,7 +28,7 @@ import pygame
 import time
 
 #키보드 연결
-#import keyboard
+#import keyboard (오류로 인해 비활성화)
 
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
@@ -181,7 +181,8 @@ if camera_type == 'picamera':
             break
 
         if cv2.waitKey(1) == ord('r'): #사고 감지 시뮬레이션용 키보드 입력 : R
-            cv2.putText(img, 'WARNING', (10,500), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 2)
+            #cv2.putText(img, 'WARNING', (10,500), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 2)
+            break
 
         rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
 
@@ -234,7 +235,8 @@ elif camera_type == 'usb':
             break
 
         if cv2.waitKey(1) == ord('r'): #사고 감지 시뮬레이션용 키보드 입력 : R
-            cv2.putText(img, 'WARNING', (10,500), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 2)
+            #cv2.putText(img, 'WARNING', (10,500), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 2)
+            break
 
     camera.release()
 
