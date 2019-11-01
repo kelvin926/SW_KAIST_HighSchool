@@ -232,6 +232,6 @@ elif camera_type == 'usb':
 
 
     camera.release()
-
-cv2.destroyAllWindows()
 print('사고가 감지되었습니다.\n')
+#cv2.destroyAllWindows()
+print('연결중입니다.')
