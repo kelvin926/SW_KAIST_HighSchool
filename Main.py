@@ -20,6 +20,7 @@ import pygame
 import time
 
 ser = serial.Serial('/dev/ttyACM0', 9600)  # 어떤식으로 오는지 확인 필요
+
 '''
 ----아두이노 기본 코드 ----
 void setup(){
@@ -32,11 +33,18 @@ void loop(){
 '''
 
 # Set up camera constants
-IM_WIDTH = 1280
-IM_HEIGHT = 720
+IM_WIDTH = 640
+IM_HEIGHT = 480
 # IM_WIDTH = 640    Use smaller resolution for
 # IM_HEIGHT = 480   slightly faster framerate
-
+'''
+2160p =  3840 * 2160
+1440p = 2560 * 1440
+1080p = 1920 * 1080
+720p = 1280 * 720
+480p = 854 * 480
+360p = 640 * 360
+'''
 # Select camera type (if user enters --usbcam when calling this script,
 # a USB webcam will be used)
 camera_type = 'picamera'
@@ -120,7 +128,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 # detection loop twice, and made one work for Picamera and the other work
 # for USB.
 
-### Picamera ###
+### Picamera ###################################################################
 if camera_type == 'picamera':
     # Initialize Picamera and grab reference to the raw capture
     camera = PiCamera()
