@@ -5,7 +5,7 @@
 # Original Code Made by Evan(EdjeElectronics)
 
 
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 
 # 패키지들
@@ -20,21 +20,21 @@ import tensorflow as tf
 import argparse
 import sys
 
-#병렬 프로세싱
+# 병렬 프로세싱
 from multiprocessing import Process
 
-#아두이노 연계
+# 아두이노 연계
 import serial
 
-#소리 출력
+# 소리 출력
 import pygame
 import time
 
-#bash명령
+# bash명령
 import os
 
-#키보드 연결
-#import keyboard (오류로 인해 비활성화)
+# 키보드 연결
+# import keyboard (오류로 인해 비활성화)
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
 
@@ -59,7 +59,7 @@ parser.add_argument('--usbcam', help='Use a USB webcam instead of picamera',
                     action='store_true')
 args = parser.parse_args()
 
-if args.usbcam:# 최근 업데이트: 19.11.1 (Ver 1.6)
+if args.usbcam:  # 최근 업데이트: 19.11.1 (Ver 1.6)
     camera_type = 'usb'
 
 # object_detection 폴더 지정
@@ -124,70 +124,75 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 # 카메라, 감지모델 초기화
 # 파이 내장 카메라와 usb웹캠 구동 방식이 상이함
+if camera_type == 'picamera':
+    # 감지 모델 초기화, 입력된 RAW데이터 정의
+    camera = PiCamera()
+    camera.resolution = (IM_WIDTH, IM_HEIGHT)
+    camera.framerate = 10
+    rawCapture = PiRGBArray(camera, size=(IM_WIDTH, IM_HEIGHT))
+    rawCapture.truncate(0)
 
 ### 파이 내장 카메라 ###################################################################
+
+
 def pi_cam():
-    if camera_type == 'picamera':
-        # 감지 모델 초기화, 입력된 RAW데이터 정의
-        camera = PiCamera()
-        camera.resolution = (IM_WIDTH, IM_HEIGHT)
-        camera.framerate = 10
-        rawCapture = PiRGBArray(camera, size=(IM_WIDTH, IM_HEIGHT))
-        rawCapture.truncate(0)
 
-        for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
-            t1 = cv2.getTickCount()
+        t1 = cv2.getTickCount()
 
-            #print(ser.readline()) => 병렬화 구현중
+        # print(ser.readline()) => 병렬화 구현중
 
-            # 프레임 획득 및 프레임 치수를 형상화: [1, None, None, 3]
-            # 단일 열 배열로, 열의 각 항목에는 픽셀 RGB 값이 있음
-            frame = np.copy(frame1.array)
-            frame.setflags(write=1)
-            frame_expanded = np.expand_dims(frame, axis=0)
+        # 프레임 획득 및 프레임 치수를 형상화: [1, None, None, 3]
+        # 단일 열 배열로, 열의 각 항목에는 픽셀 RGB 값이 있음
+        frame = np.copy(frame1.array)
+        frame.setflags(write=1)
+        frame_expanded = np.expand_dims(frame, axis=0)
 
-            # 감지 모델을 이용하여 실제 연산
-            (boxes, scores, classes, num) = sess.run(
-                [detection_boxes, detection_scores, detection_classes, num_detections],
-                feed_dict={image_tensor: frame_expanded})
+        # 감지 모델을 이용하여 실제 연산
+        (boxes, scores, classes, num) = sess.run(
+            [detection_boxes, detection_scores, detection_classes, num_detections],
+            feed_dict={image_tensor: frame_expanded})
 
-            # 감지된 부분을 프레임에 Draw
-            vis_util.visualize_boxes_and_labels_on_image_array(
-                frame,
-                np.squeeze(boxes),
-                np.squeeze(classes).astype(np.int32),
-                np.squeeze(scores),
-                category_index,
-                use_normalized_coordinates=True,
-                line_thickness=8,
-                min_score_thresh=0.40)
+        # 감지된 부분을 프레임에 Draw
+        vis_util.visualize_boxes_and_labels_on_image_array(
+            frame,
+            np.squeeze(boxes),
+            np.squeeze(classes).astype(np.int32),
+            np.squeeze(scores),
+            category_index,
+            use_normalized_coordinates=True,
+            line_thickness=8,
+            min_score_thresh=0.40)
 
-            cv2.putText(frame, "FPS: {0:.2f}".format(
-                frame_rate_calc), (30, 50), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame, "FPS: {0:.2f}".format(
+            frame_rate_calc), (30, 50), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
 
-            # 프레임에 Draw된 부분을 실제 화면에 표시
-            cv2.imshow('Object detector', frame)
+        # 프레임에 Draw된 부분을 실제 화면에 표시
+        cv2.imshow('Object detector', frame)
 
-            t2 = cv2.getTickCount()
-            time1 = (t2 - t1) / freq
-            frame_rate_calc = 1 / time1
+        t2 = cv2.getTickCount()
+        time1 = (t2 - t1) / freq
+        frame_rate_calc = 1 / time1
 
-            # 키보드의 Q 버튼을 통해 종료
-            if cv2.waitKey(1) == ord('q'):
-                break
+        # 키보드의 Q 버튼을 통해 종료
+        if cv2.waitKey(1) == ord('q'):
+            break
 
-            rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
+        rawCapture.truncate(0)  # 다음 프레임 준비 클리어 작업(?)
 
-        camera.close() #함수 끝
-    cv2.destroyAllWindows()
-    print('사고가 감지되었습니다.')
-    print('119서버와 연결중입니다.')
+    camera.close()  # 함수 끝
 
 
-def ar_serial(): #아두이노 시리얼 값 받는 함수
+cv2.destroyAllWindows()
+print('사고가 감지되었습니다.')
+print('119서버와 연결중입니다.')
+
+
+def ar_serial():  # 아두이노 시리얼 값 받는 함수
     while(1):
         print(ser.readline())
+
 
 if __name__ == '__main__':
     Process(target=pi_cam).start()
