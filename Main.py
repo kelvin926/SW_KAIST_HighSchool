@@ -179,8 +179,12 @@ if camera_type == 'picamera':
         if cv2.waitKey(1) == ord('q'):
             break
 
-        elif keyboard.is_pressed('R') #사고 감지 시뮬레이션용 키보드 입력 : R
+        elif keyboard.is_pressed('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
             print('사고가 감지되었습니다.')
+
+        else:
+            continue
+
 
         rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
 
