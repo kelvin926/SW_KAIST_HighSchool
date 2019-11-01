@@ -46,7 +46,7 @@ void loop(){
 '''
 
 # 카메라 세팅
-IM_WIDTH = 640
+IM_WIDTH = 854
 IM_HEIGHT = 480
 # IM_WIDTH = 640
 # IM_HEIGHT = 480
