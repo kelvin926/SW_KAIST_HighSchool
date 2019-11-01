@@ -134,7 +134,6 @@ if camera_type == 'picamera':
 
 ### 파이 내장 카메라 ###################################################################
 
-
 def pi_cam():
 
     for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
@@ -182,11 +181,9 @@ def pi_cam():
         rawCapture.truncate(0)  # 다음 프레임 준비 클리어 작업(?)
 
     camera.close()  # 함수 끝
-
-
-cv2.destroyAllWindows()
-print('사고가 감지되었습니다.')
-print('119서버와 연결중입니다.')
+    cv2.destroyAllWindows()
+    print('사고가 감지되었습니다.')
+    print('119서버와 연결중입니다.')
 
 
 def ar_serial():  # 아두이노 시리얼 값 받는 함수
