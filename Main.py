@@ -180,8 +180,8 @@ if camera_type == 'picamera':
         if cv2.waitKey(1) == ord('q'):
             break
 
-        elif cv2.waitKey(1) == ord('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
-            print('사고가 감지되었습니다.')
+        if cv2.waitKey(1) == ord('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
+            cv2.putText(img, 'WARNING', (10,500), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 2)
 
         rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
 
@@ -232,6 +232,9 @@ elif camera_type == 'usb':
         # 키보드의 Q버튼을 통해 종료
         if cv2.waitKey(1) == ord('q'):
             break
+
+        if cv2.waitKey(1) == ord('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
+            cv2.putText(img, 'WARNING', (10,500), cv2.FONT_HERSHEY_SIMPLEX, 4, (255,255,255), 2)
 
     camera.release()
 
