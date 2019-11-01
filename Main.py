@@ -28,7 +28,7 @@ import pygame
 import time
 
 #키보드 연결
-import keyboard
+#import keyboard
 
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
@@ -180,7 +180,7 @@ if camera_type == 'picamera':
         if cv2.waitKey(1) == ord('q'):
             break
 
-        elif keyboard.is_pressed('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
+        elif waitKey(1) == ord('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
             print('사고가 감지되었습니다.')
 
         else:
