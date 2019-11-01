@@ -1,9 +1,14 @@
-# 소프트웨어 동아리 경진대회 제출용 Main Python 파일
+# 소프트웨어 동아리 경진대회 Main Python 파일
 # 파일 이름: Object_detection_picamera.py
-# 제작: 장현서(kelvin926@naver.com
-# 최종 제작일: 19.11.1 (Ver 1.0)
+# 제작: 장현서(kelvin926@naver.com) / 일산대진고등학교 2학년 '재간둥이'팀
+# 최근 업데이트: 19.11.1 (Ver 1.2)
 # Original Code Made by Evan(EdjeElectronics)
-# Import packages
+
+
+#-*- coding:utf-8 -*-
+
+
+# 패키지들
 from utils import visualization_utils as vis_util
 from utils import label_map_util
 import os
@@ -15,9 +20,16 @@ import tensorflow as tf
 import argparse
 import sys
 
+#아두이노 연계
 import serial as Serial
+
+#소리 출력
 import pygame
 import time
+
+#키보드 연결
+import keyboard
+
 
 ser = serial.Serial('/dev/ttyACM0', 9600)  # 어떤식으로 오는지 확인 필요
 
@@ -32,11 +44,11 @@ void loop(){
 }
 '''
 
-# Set up camera constants
+# 카메라 세팅
 IM_WIDTH = 640
 IM_HEIGHT = 480
-# IM_WIDTH = 640    Use smaller resolution for
-# IM_HEIGHT = 480   slightly faster framerate
+# IM_WIDTH = 640
+# IM_HEIGHT = 480
 '''
 2160p =  3840 * 2160
 1440p = 2560 * 1440
@@ -45,8 +57,8 @@ IM_HEIGHT = 480
 480p = 854 * 480
 360p = 640 * 360
 '''
-# Select camera type (if user enters --usbcam when calling this script,
-# a USB webcam will be used)
+# --usbcam => usb웹캠 사용,
+# 기본 : 내장 카메라 사용
 camera_type = 'picamera'
 parser = argparse.ArgumentParser()
 parser.add_argument('--usbcam', help='Use a USB webcam instead of picamera',
@@ -55,38 +67,33 @@ args = parser.parse_args()
 if args.usbcam:
     camera_type = 'usb'
 
-# This is needed since the working directory is the object_detection folder.
+# object_detection 폴더 지정
 sys.path.append('..')
 
-# Import utilites
+# utilites 모듈 입력 (선택)
 
-# Name of the directory containing the object detection module we're using
+# 러닝된 모델 이름
 MODEL_NAME = 'ssdlite_mobilenet_v2_coco_2018_05_09'
 
-# Grab path to current working directory
+# 작업 폴더 위치 확인
 CWD_PATH = os.getcwd()
 
-# Path to frozen detection graph .pb file, which contains the model that is used
-# for object detection.
+# frozen_detection_graph.pb 의 위치, 이 파일은 오브젝트 탐지에 이용됨
 PATH_TO_CKPT = os.path.join(CWD_PATH, MODEL_NAME, 'frozen_inference_graph.pb')
 
-# Path to label map file
+# 레이블 파일 위치
 PATH_TO_LABELS = os.path.join(CWD_PATH, 'data', 'mscoco_label_map.pbtxt')
 
-# Number of classes the object detector can identify
+# 한번에 최대 몇개의 오브젝트를 탐지할지
 NUM_CLASSES = 90
 
-# Load the label map.
-# Label maps map indices to category names, so that when the convolution
-# network predicts `5`, we know that this corresponds to `airplane`.
-# Here we use internal utility functions, but anything that returns a
-# dictionary mapping integers to appropriate string labels would be fine
+# 레이블 파일 로드
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 categories = label_map_util.convert_label_map_to_categories(
     label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
-# Load the Tensorflow model into memory.
+# 메모리에 텐서플로우 모델 위치
 detection_graph = tf.Graph()
 with detection_graph.as_default():
     od_graph_def = tf.GraphDef()
@@ -98,39 +105,34 @@ with detection_graph.as_default():
     sess = tf.Session(graph=detection_graph)
 
 
-# Define input and output tensors (i.e. data) for the object detection classifier
+# 입/출력 데이터 정의
 
-# Input tensor is the image
+# tensor 이미지 로드
 image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
 
-# Output tensors are the detection boxes, scores, and classes
-# Each box represents a part of the image where a particular object was detected
+# detection boxes, scores, classes 출력
+# 각 box는 매 회 감지를 나타냄
 detection_boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
 
-# Each score represents level of confidence for each of the objects.
-# The score is shown on the result image, together with the class label.
+# 각 점수는 각 객체에 대한 신뢰도를 나타냄
+# 등급 레이블과 함께 결과 영상에 점수가 표시됨
 detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
 detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
 
-# Number of objects detected
+# 감지된 오브젝트 수
 num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
-# Initialize frame rate calculation
+# 프레임 계산 초기화
 frame_rate_calc = 1
 freq = cv2.getTickFrequency()
 font = cv2.FONT_HERSHEY_SIMPLEX
 
-# Initialize camera and perform object detection.
-# The camera has to be set up and used differently depending on if it's a
-# Picamera or USB webcam.
+# 카메라, 감지모델 초기화
+# 파이 내장 카메라와 usb웹캠 구동 방식이 상이함
 
-# I know this is ugly, but I basically copy+pasted the code for the object
-# detection loop twice, and made one work for Picamera and the other work
-# for USB.
-
-### Picamera ###################################################################
+### 파이 내장 카메라 ###################################################################
 if camera_type == 'picamera':
-    # Initialize Picamera and grab reference to the raw capture
+    # 감지 모델 초기화, 입력된 RAW데이터 정의
     camera = PiCamera()
     camera.resolution = (IM_WIDTH, IM_HEIGHT)
     camera.framerate = 10
@@ -141,18 +143,18 @@ if camera_type == 'picamera':
 
         t1 = cv2.getTickCount()
 
-        # Acquire frame and expand frame dimensions to have shape: [1, None, None, 3]
-        # i.e. a single-column array, where each item in the column has the pixel RGB value
+        # 프레임 획득 및 프레임 치수를 형상화: [1, None, None, 3]
+        # 단일 열 배열로, 열의 각 항목에는 픽셀 RGB 값이 있음
         frame = np.copy(frame1.array)
         frame.setflags(write=1)
         frame_expanded = np.expand_dims(frame, axis=0)
 
-        # Perform the actual detection by running the model with the image as input
+        # 감지 모델을 이용하여 실제 연산
         (boxes, scores, classes, num) = sess.run(
             [detection_boxes, detection_scores, detection_classes, num_detections],
             feed_dict={image_tensor: frame_expanded})
 
-        # Draw the results of the detection (aka 'visulaize the results')
+        # 감지된 부분을 프레임에 Draw
         vis_util.visualize_boxes_and_labels_on_image_array(
             frame,
             np.squeeze(boxes),
@@ -166,24 +168,30 @@ if camera_type == 'picamera':
         cv2.putText(frame, "FPS: {0:.2f}".format(
             frame_rate_calc), (30, 50), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
 
-        # All the results have been drawn on the frame, so it's time to display it.
+        # 프레임에 Draw된 부분을 실제 화면에 표시
         cv2.imshow('Object detector', frame)
 
         t2 = cv2.getTickCount()
         time1 = (t2 - t1) / freq
         frame_rate_calc = 1 / time1
 
-        # Press 'q' to quit
+        # 키보드의 Q 버튼을 통해 종료
         if cv2.waitKey(1) == ord('q'):
             break
 
-        rawCapture.truncate(0)
+        elif keyboard.is_pressed('R') #사고 감지 시뮬레이션용 키보드 입력 : R
+        print('사고가 감지되었습니다.')
+
+
+
+
+        rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
 
     camera.close()
 
 ### USB webcam ###
 elif camera_type == 'usb':
-    # Initialize USB webcam feed
+    # 웹캠 입력값 초기화
     camera = cv2.VideoCapture(0)
     ret = camera.set(3, IM_WIDTH)
     ret = camera.set(4, IM_HEIGHT)
@@ -192,17 +200,17 @@ elif camera_type == 'usb':
 
         t1 = cv2.getTickCount()
 
-        # Acquire frame and expand frame dimensions to have shape: [1, None, None, 3]
-        # i.e. a single-column array, where each item in the column has the pixel RGB value
+        # 프레임 획득 및 프레임 치수를 형상화: [1, None, None, 3]
+        # 단일 열 배열로, 열의 각 항목에는 픽셀 RGB 값이 있음
         ret, frame = camera.read()
         frame_expanded = np.expand_dims(frame, axis=0)
 
-        # Perform the actual detection by running the model with the image as input
+        # 실제로 감지된 이미지를 넣어 모델에 돌림
         (boxes, scores, classes, num) = sess.run(
             [detection_boxes, detection_scores, detection_classes, num_detections],
             feed_dict={image_tensor: frame_expanded})
 
-        # Draw the results of the detection (aka 'visulaize the results')
+        # 감지된 부분을 프레임에 Draw
         vis_util.visualize_boxes_and_labels_on_image_array(
             frame,
             np.squeeze(boxes),
@@ -216,14 +224,14 @@ elif camera_type == 'usb':
         cv2.putText(frame, "FPS: {0:.2f}".format(
             frame_rate_calc), (30, 50), font, 1, (255, 255, 0), 2, cv2.LINE_AA)
 
-        # All the results have been drawn on the frame, so it's time to display it.
+        # 프레임에 Draw된 부분을 실제 화면에 표시
         cv2.imshow('Object detector', frame)
 
         t2 = cv2.getTickCount()
         time1 = (t2 - t1) / freq
         frame_rate_calc = 1 / time1
 
-        # Press 'q' to quit
+        # 키보드의 Q버튼을 통해 종료
         if cv2.waitKey(1) == ord('q'):
             break
 
