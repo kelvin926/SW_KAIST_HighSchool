@@ -31,7 +31,8 @@ import time
 import keyboard
 
 
-ser = serial('/dev/ttyACM0', 9600)  # 어떤식으로 오는지 확인 필요
+ser = serial.Serial('/dev/ttyACM0', 9600)
+
 
 '''
 ----아두이노 기본 코드 ----
