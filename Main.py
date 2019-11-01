@@ -31,7 +31,7 @@ import time
 import keyboard
 
 
-ser = serial('/dev/ttyACM0', 9600)
+ser = serial.serial('/dev/ttyACM0', 9600)
 
 
 '''
