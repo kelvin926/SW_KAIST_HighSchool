@@ -1,7 +1,7 @@
 # 소프트웨어 동아리 경진대회 Main Python 파일
 # 파일 이름: Object_detection_picamera.py
 # 제작: 장현서(kelvin926@naver.com) / 일산대진고등학교 2학년 '재간둥이'팀
-# 최근 업데이트: 19.11.1 (Ver 1.3)
+# 최근 업데이트: 19.11.1 (Ver 1.4)
 # Original Code Made by Evan(EdjeElectronics)
 
 
@@ -180,7 +180,7 @@ if camera_type == 'picamera':
         if cv2.waitKey(1) == ord('q'):
             break
 
-        elif waitKey(1) == ord('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
+        elif cv2.waitKey(1) == ord('R'): #사고 감지 시뮬레이션용 키보드 입력 : R
             print('사고가 감지되었습니다.')
 
         else:
