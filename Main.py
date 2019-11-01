@@ -1,7 +1,7 @@
 # 소프트웨어 동아리 경진대회 Main Python 파일
 # 파일 이름: Object_detection_picamera.py
 # 제작: 장현서(kelvin926@naver.com) / 일산대진고등학교 2학년 '재간둥이'팀
-# 최근 업데이트: 19.11.1 (Ver 1.2)
+# 최근 업데이트: 19.11.1 (Ver 1.3)
 # Original Code Made by Evan(EdjeElectronics)
 
 
@@ -31,7 +31,7 @@ import time
 import keyboard
 
 
-ser = Serial('/dev/ttyACM0', 9600)  # 어떤식으로 오는지 확인 필요
+ser = serial('/dev/ttyACM0', 9600)  # 어떤식으로 오는지 확인 필요
 
 '''
 ----아두이노 기본 코드 ----
