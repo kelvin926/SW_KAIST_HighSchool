@@ -20,108 +20,108 @@ byte nuidPICC[4];
 
 void setup() {
 
-  lcd.begin(); //LCD 사용 시작
+        lcd.begin(); //LCD 사용 시작
 
-  Serial.begin(9600);
-  SPI.begin(); // SPI 시작
-  rfid.PCD_Init(); // RFID 시작
+        Serial.begin(9600);
+        SPI.begin(); // SPI 시작
+        rfid.PCD_Init(); // RFID 시작
 
-  //초기 키 ID 초기화
-  for (byte i = 0; i < 6; i++) {
-    key.keyByte[i] = 0xFF;
-  }
+        //초기 키 ID 초기화
+        for (byte i = 0; i < 6; i++) {
+                key.keyByte[i] = 0xFF;
+        }
 
-  Serial.println(F("This code scan the MIFARE Classsic NUID."));
-  Serial.print(F("Using the following key:"));
-  printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
+        Serial.println(F("This code scan the MIFARE Classsic NUID."));
+        Serial.print(F("Using the following key:"));
+        printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
 }
 
 void loop() {
 
-  // 카드가 인식되었다면 다음으로 넘어가고 아니면 더이상
-  // 실행 안하고 리턴
-  if ( ! rfid.PICC_IsNewCardPresent())
-    return;
+        // 카드가 인식되었다면 다음으로 넘어가고 아니면 더이상
+        // 실행 안하고 리턴
+        if ( !rfid.PICC_IsNewCardPresent())
+                return;
 
-  // ID가 읽혀졌다면 다음으로 넘어가고 아니면 더이상
-  // 실행 안하고 리턴
-  if ( ! rfid.PICC_ReadCardSerial())
-    return;
+        // ID가 읽혀졌다면 다음으로 넘어가고 아니면 더이상
+        // 실행 안하고 리턴
+        if ( !rfid.PICC_ReadCardSerial())
+                return;
 
-  Serial.print(F("PICC type: "));
+        Serial.print(F("PICC type: "));
 
-  //카드의 타입을 읽어온다.
-  MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
+        //카드의 타입을 읽어온다.
+        MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
 
-  //모니터에 출력
-  Serial.println(rfid.PICC_GetTypeName(piccType));
-
-
-  // 만약 바로 전에 인식한 RF 카드와 다르다면..
-  if (rfid.uid.uidByte[0] != nuidPICC[0] ||
-    rfid.uid.uidByte[1] != nuidPICC[1] ||
-    rfid.uid.uidByte[2] != nuidPICC[2] ||
-    rfid.uid.uidByte[3] != nuidPICC[3] ) {
-    Serial.println(F("A new card has been detected."));
-
-    // ID를 저장해둔다.
-    for (byte i = 0; i < 4; i++) {
-      nuidPICC[i] = rfid.uid.uidByte[i];
-    }
-
-    //모니터 출력
-    Serial.println(F("The NUID tag is:"));
-
-    Serial.print(F("In hex: "));
-    //16진수로 변환해서 출력
-    printHex(rfid.uid.uidByte, rfid.uid.size);
-    Serial.println();
+        //모니터에 출력
+        Serial.println(rfid.PICC_GetTypeName(piccType));
 
 
-    Serial.print(F("In dec: "));
-    //10진수로 출력
-    printDec(rfid.uid.uidByte, rfid.uid.size);
-    Serial.println();
+        // 만약 바로 전에 인식한 RF 카드와 다르다면..
+        if (rfid.uid.uidByte[0] != nuidPICC[0] ||
+            rfid.uid.uidByte[1] != nuidPICC[1] ||
+            rfid.uid.uidByte[2] != nuidPICC[2] ||
+            rfid.uid.uidByte[3] != nuidPICC[3] ) {
+                Serial.println(F("A new card has been detected."));
 
-      lcd.setCursor(3, 0);    // 커서를 5, 0에 가져다 놓아라. (열, 행)
-  lcd.print("Black box");
-  lcd.setCursor(3, 1);    // 커서를 3, 1로 가져다 놓아라. (열, 행)
-  lcd.print("will work");
-  delay(1000);
-  lcd.clear();            // 글자를 모두 지워라.
-  delay(1000);
-  lcd.setCursor(3, 0);    // 커서를 5, 0에 가져다 놓아라. (열, 행)
-  lcd.print("Connecting");
-  lcd.setCursor(3, 1);    // 커서를 3, 1로 가져다 놓아라. (열, 행)
-  lcd.print("with owner");
-  delay(5000);
-  lcd.clear();
-  }
-  else {
-    Serial.println(F("Card read previously.")); //바로 전에 인식한 것과 동일하다면
-  }
+                // ID를 저장해둔다.
+                for (byte i = 0; i < 4; i++) {
+                        nuidPICC[i] = rfid.uid.uidByte[i];
+                }
 
-  // PICC 종료
-  rfid.PICC_HaltA();
+                //모니터 출력
+                Serial.println(F("The NUID tag is:"));
 
-  // 암호화 종료(?)
-  rfid.PCD_StopCrypto1();
+                Serial.print(F("In hex: "));
+                //16진수로 변환해서 출력
+                printHex(rfid.uid.uidByte, rfid.uid.size);
+                Serial.println();
 
-  //다시 처음으로 돌아감.
+
+                Serial.print(F("In dec: "));
+                //10진수로 출력
+                printDec(rfid.uid.uidByte, rfid.uid.size);
+                Serial.println();
+
+                lcd.setCursor(3, 0); // 커서를 5, 0에 가져다 놓아라. (열, 행)
+                lcd.print("Black box");
+                lcd.setCursor(3, 1); // 커서를 3, 1로 가져다 놓아라. (열, 행)
+                lcd.print("will work");
+                delay(1000);
+                lcd.clear(); // 글자를 모두 지워라.
+                delay(1000);
+                lcd.setCursor(3, 0); // 커서를 5, 0에 가져다 놓아라. (열, 행)
+                lcd.print("Connecting");
+                lcd.setCursor(3, 1); // 커서를 3, 1로 가져다 놓아라. (열, 행)
+                lcd.print("with owner");
+                delay(5000);
+                lcd.clear();
+        }
+        else {
+                Serial.println(F("Card read previously.")); //바로 전에 인식한 것과 동일하다면
+        }
+
+        // PICC 종료
+        rfid.PICC_HaltA();
+
+        // 암호화 종료(?)
+        rfid.PCD_StopCrypto1();
+
+        //다시 처음으로 돌아감.
 }
 
 //16진수로 변환하는 함수
 void printHex(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], HEX);
-  }
+        for (byte i = 0; i < bufferSize; i++) {
+                Serial.print(buffer[i] < 0x10 ? " 0" : " ");
+                Serial.print(buffer[i], HEX);
+        }
 }
 
 //10진수로 변환하는 함수
 void printDec(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], DEC);
-  }
+        for (byte i = 0; i < bufferSize; i++) {
+                Serial.print(buffer[i] < 0x10 ? " 0" : " ");
+                Serial.print(buffer[i], DEC);
+        }
 }
