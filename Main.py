@@ -33,7 +33,6 @@ import os
 #키보드 연결
 #import keyboard (오류로 인해 비활성화)
 
-
 ser = serial.Serial('/dev/ttyACM0', 9600)
 
 # 카메라 세팅

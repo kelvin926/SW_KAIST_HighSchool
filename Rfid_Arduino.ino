@@ -1,7 +1,7 @@
 // 소프트웨어 동아리 경진대회 Main 아두이노 파일
 // 파일 이름: Rfid_Arduino.ino
 // 제작 : 일산대진고등학교 2학년 '재간둥이 Team'
-// 최근 업데이트: 19.11.1 (Ver 1.1)
+// 최근 업데이트: 19.11.1 (Ver 1.7)
 
 
 // 라이브러리 해더
@@ -43,7 +43,7 @@ void setup() {
 }
 
 void loop() {
-        Serial.print(F("Off "));
+        Serial.print(F("Off\n"));
         delay(1000);
         // 카드가 인식되었다면 다음으로 넘어가고 아니면 더이상
         // 실행 안하고 리턴
@@ -79,7 +79,7 @@ void loop() {
                 //모니터 출력
 //    Serial.println(F("The NUID tag is:"));
 
-                Serial.print(F("ON"));
+                Serial.print(F("ON\n"));
                 delay(2000);
 
 
@@ -108,7 +108,13 @@ void loop() {
                 lcd.clear();
         }
         else {
-                Serial.println(F("Card read previously.")); //바로 전에 인식한 것과 동일하다면
+                Serial.println(F("Re\n")); //바로 전에 인식한 것과 동일하다면
+                lcd.setCursor(3, 0); // 커서를 5, 0에 가져다 놓아라. (열, 행)
+                lcd.print("Same NFC");
+                lcd.setCursor(3, 1); // 커서를 5, 0에 가져다 놓아라. (열, 행)
+                lcd.print("Don't retry");
+                delay(3000);
+                lcd.clear();
         }
 
         // PICC 종료
