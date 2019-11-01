@@ -241,4 +241,3 @@ elif camera_type == 'usb':
 cv2.destroyAllWindows()
 print('사고가 감지되었습니다.')
 print('연결중입니다.')
-os.system('ls')
