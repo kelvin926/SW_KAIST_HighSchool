@@ -175,14 +175,14 @@ if camera_type == 'picamera':
         # 프레임에 Draw된 부분을 실제 화면에 표시
         cv2.imshow('Object detector', frame)
 
-        print(ser.readline)
+        print(ser.readline())
 
         t2 = cv2.getTickCount()
         time1 = (t2 - t1) / freq
         frame_rate_calc = 1 / time1
 
         # 키보드의 Q 버튼을 통해 종료
-        if cv2.waitKey(1) == ord('q' or 'r'):
+        if cv2.waitKey(1) == ord('q'):
             break
 
         rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
@@ -232,7 +232,7 @@ elif camera_type == 'usb':
         frame_rate_calc = 1 / time1
 
         # 키보드의 Q버튼을 통해 종료
-        if cv2.waitKey(1) == ord('q' or 'r'):
+        if cv2.waitKey(1) == ord('q'):
             break
 
 
