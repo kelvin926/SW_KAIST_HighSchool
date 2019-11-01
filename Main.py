@@ -21,7 +21,7 @@ import argparse
 import sys
 
 #아두이노 연계
-from serial import *
+import serial
 
 #소리 출력
 import pygame
@@ -31,7 +31,7 @@ import time
 import keyboard
 
 
-ser = serial.Serial('/dev/ttyACM0', 9600)
+ser = serial('/dev/ttyACM0', 9600)
 
 
 '''
