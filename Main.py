@@ -27,6 +27,9 @@ import serial
 import pygame
 import time
 
+#bash명령
+import os
+
 #키보드 연결
 #import keyboard (오류로 인해 비활성화)
 
@@ -233,5 +236,10 @@ elif camera_type == 'usb':
 
     camera.release()
 print('사고가 감지되었습니다.\n')
-#cv2.destroyAllWindows()
 print('연결중입니다.')
+os.system('ls')
+
+
+'''
+cv2.destroyAllWindows()
+'''
