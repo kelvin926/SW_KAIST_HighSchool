@@ -241,3 +241,4 @@ elif camera_type == 'usb':
     camera.release()
 
 cv2.destroyAllWindows()
+print('print Test')
