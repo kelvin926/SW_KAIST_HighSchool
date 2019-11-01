@@ -175,7 +175,7 @@ if camera_type == 'picamera':
         # 프레임에 Draw된 부분을 실제 화면에 표시
         cv2.imshow('Object detector', frame)
 
-        print ser.readline()
+        print(ser.readline)
 
         t2 = cv2.getTickCount()
         time1 = (t2 - t1) / freq
