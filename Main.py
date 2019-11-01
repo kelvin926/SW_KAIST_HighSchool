@@ -185,9 +185,10 @@ if camera_type == 'picamera':
 
         rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
 
-        print(ser.readline())
+        #print(ser.readline())
     camera.close()
 
+'''
 ### USB webcam ###
 elif camera_type == 'usb':
     # 웹캠 입력값 초기화
@@ -236,6 +237,7 @@ elif camera_type == 'usb':
 
 
     camera.release()
+    '''
 
 cv2.destroyAllWindows()
 print('사고가 감지되었습니다.')
