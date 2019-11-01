@@ -1,7 +1,7 @@
 # 소프트웨어 동아리 경진대회 Main Python 파일
 # 파일 이름: Object_detection_picamera.py
 # 제작: 장현서(kelvin926@naver.com) / 일산대진고등학교 2학년 '재간둥이'팀
-# 최근 업데이트: 19.11.1 (Ver 1.6)
+# 최근 업데이트: 19.11.2 (Ver 1.7)
 # Original Code Made by Evan(EdjeElectronics)
 
 
@@ -36,18 +36,6 @@ import os
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
 
-
-'''
-----아두이노 기본 코드 ----
-void setup(){
-    serial.begin(9600);
-}
-void loop(){
-    Serial.println("hello Pi");
-    delay(1000);
-}
-'''
-
 # 카메라 세팅
 IM_WIDTH = 1280
 IM_HEIGHT = 720
@@ -68,7 +56,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--usbcam', help='Use a USB webcam instead of picamera',
                     action='store_true')
 args = parser.parse_args()
-if args.usbcam:
+
+if args.usbcam:# 최근 업데이트: 19.11.1 (Ver 1.6)
     camera_type = 'usb'
 
 # object_detection 폴더 지정
@@ -147,6 +136,8 @@ if camera_type == 'picamera':
 
         t1 = cv2.getTickCount()
 
+        print(ser.readline())
+
         # 프레임 획득 및 프레임 치수를 형상화: [1, None, None, 3]
         # 단일 열 배열로, 열의 각 항목에는 픽셀 RGB 값이 있음
         frame = np.copy(frame1.array)
@@ -185,7 +176,6 @@ if camera_type == 'picamera':
 
         rawCapture.truncate(0) #다음 프레임 준비 클리어 작업(?)
 
-        #print(ser.readline())
     camera.close()
 
 '''
@@ -241,4 +231,4 @@ elif camera_type == 'usb':
 
 cv2.destroyAllWindows()
 print('사고가 감지되었습니다.')
-print('연결중입니다.')
+print('119서버와 연결중입니다.')
