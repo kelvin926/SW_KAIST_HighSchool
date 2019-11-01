@@ -1,9 +1,14 @@
+// 소프트웨어 동아리 경진대회 Main 아두이노 파일
+// 파일 이름: Rfid_Arduino.ino
+// 제작 : 일산대진고등학교 2학년 '재간둥이 Team'
+// 최근 업데이트: 19.11.1 (Ver 1.1)
+
 // 라이브러리 해더
 #include <SPI.h>
 #include <MFRC522.h>
 
 // SS(Chip Select)과 RST(Reset) 핀 설정
-// 나머지 PIN은 SPI 라이브러리를 사용하기에 별도의 설정이 필요없다.
+// 나머지 PIN은 SPI 라이브러리를 사용하기에 별도의 설정이 필요 X
 #define SS_PIN 10
 #define RST_PIN 9
 
@@ -11,7 +16,7 @@
 LiquidCrystal_I2C lcd(0x3F, 16, 2);  //lcd 객체 선언
 
 // 라이브러리 생성
-MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
+MFRC522 rfid(SS_PIN, RST_PIN); // class의 인스턴스
 
 MFRC522::MIFARE_Key key;
 
