@@ -76,22 +76,9 @@ void loop() {
                         ;
                 }
 
-                //모니터 출력
-//    Serial.println(F("The NUID tag is:"));
 
-                Serial.print(F("ON\n"));
+                Serial.print("ON\n");
                 delay(2000);
-
-
-                //16진수로 변환해서 출력
-//    printHex(rfid.uid.uidByte, rfid.uid.size);
-//    Serial.println();
-
-
-//    Serial.print(F("In dec: "));
-//    //10진수로 출력
-//    printDec(rfid.uid.uidByte, rfid.uid.size);
-//    Serial.println();
 
                 lcd.setCursor(3, 0); // 커서를 5, 0에 가져다 놓아라. (열, 행)
                 lcd.print("Black box");
@@ -108,7 +95,7 @@ void loop() {
                 lcd.clear();
         }
         else {
-                Serial.println(F("Re\n")); //바로 전에 인식한 것과 동일하다면
+                Serial.println("Re\n"); //바로 전에 인식한 것과 동일하다면
                 lcd.setCursor(3, 0); // 커서를 5, 0에 가져다 놓아라. (열, 행)
                 lcd.print("Same NFC");
                 lcd.setCursor(3, 1); // 커서를 5, 0에 가져다 놓아라. (열, 행)
@@ -124,20 +111,4 @@ void loop() {
         rfid.PCD_StopCrypto1();
 
         //다시 처음으로 돌아감.
-}
-
-//16진수로 변환하는 함수
-void printHex(byte *buffer, byte bufferSize) {
-        for (byte i = 0; i < bufferSize; i++) {
-                Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-                Serial.print(buffer[i], HEX);
-        }
-}
-
-//10진수로 변환하는 함수
-void printDec(byte *buffer, byte bufferSize) {
-        for (byte i = 0; i < bufferSize; i++) {
-                Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-                Serial.print(buffer[i], DEC);
-        }
 }
