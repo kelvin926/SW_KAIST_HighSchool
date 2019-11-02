@@ -181,24 +181,38 @@ camera.close()  # 함수 끝
 cv2.destroyAllWindows()
 print('사고가 감지되었습니다.')
 print('119서버와 연결중입니다.')
+time.sleep(1)
+print('25% - 해당 영상 파일 편집중...')
+time.sleep(1)
+print('50% - 통신 테스트 중....')
+time.sleep(1)
+print('75% - 편집 완료! 해당 영상을 전송 중입니다.')
+time.sleep(2)
+print('100% - 완료!')
+print('해당 영상과 함께 신고 완료되었습니다.')
 
-
-time.sleep(5)
+time.sleep(1)
+print('===============================')
+print('===============================')
+print('===============================')
+print('===============================')
+print('주차 모드로 진입합니다. 잠시만 기다려주세요.')
+time.sleep(3)
+print('해당 모듈 활성화 완료!')
+time.sleep(1)
 
 while(1):
     nfc = ser.readline()
 
-    print(nfc)
-
-
-    '''
-    if nfc == 'on\n':
-        print("hello")
-    elif nfc == 'off\n':
-        print("Bye")
+    if nfc == "b'on\n'":
+        print("인식되었습니다.")
+        time.sleep(1)
+        print('연락중입니다.')
+    elif nfc == "b'Off\n'":
+        print("인식되지 않았습니다.")
     else:
-        print("ha..")
-    '''
+        print("비정상적(연속적) 입력이 있습니다.")
+
 
 '''
 def ar_serial():  # 아두이노 시리얼 값 받는 함수
