@@ -202,16 +202,9 @@ print('해당 모듈 활성화 완료!')
 time.sleep(1)
 
 while(1):
-    nfc = ser.readline()
+    print(ser.readline())
 
-    if nfc == "b'on\n'":
-        print("인식되었습니다.")
-        time.sleep(1)
-        print('연락중입니다.')
-    elif nfc == "b'Off\n'":
-        print("인식되지 않았습니다.")
-    else:
-        print("비정상적(연속적) 입력이 있습니다.")
+
 
 
 '''
