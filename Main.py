@@ -173,7 +173,8 @@ for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port
 
     # 키보드의 Q 버튼을 통해 종료
     if cv2.waitKey(1) == ord('q'):
-        break
+        cv2.putText(frame, "사고가 감지되었습니다. 119서버와 연결중입니다.", (0, 100), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        #break
 
     rawCapture.truncate(0)  # 다음 프레임 준비 클리어 작업(?)
 
@@ -183,10 +184,10 @@ print('사고가 감지되었습니다.')
 print('119서버와 연결중입니다.')
 
 
+
 def ar_serial():  # 아두이노 시리얼 값 받는 함수
     while(1):
         print(ser.readline())
-        time.sleep(1)
 
 
 if __name__ == '__main__':
