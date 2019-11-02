@@ -173,8 +173,9 @@ for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port
 
     # 키보드의 Q 버튼을 통해 종료
     if cv2.waitKey(1) == ord('q'):
-        src = np.zeros((768, 1366, 3), dtype = np.uint8)
-        cv2.putText(src, "Yeah~", (900, 600), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 255, 255), 3)
+        while(1):
+            src = np.zeros((768, 1366, 3), dtype = np.uint8)
+            cv2.putText(src, "Yeah~", (900, 600), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 255, 255), 3)
         #break
 
     rawCapture.truncate(0)  # 다음 프레임 준비 클리어 작업(?)
