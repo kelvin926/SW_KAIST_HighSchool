@@ -188,13 +188,17 @@ time.sleep(5)
 while(1):
     nfc = ser.readline()
 
+    print(nfc)
+
+
+    '''
     if nfc == 'on\n':
         print("hello")
     elif nfc == 'off\n':
         print("Bye")
     else:
         print("ha..")
-
+    '''
 
 '''
 def ar_serial():  # 아두이노 시리얼 값 받는 함수
