@@ -190,6 +190,6 @@ def ar_serial():  # 아두이노 시리얼 값 받는 함수
 
 
 if __name__ == '__main__':
-    Process(target=pi_cam).start()
-    time.sleep(5)
+    #Process(target=pi_cam).start()
+    #time.sleep(5)
     Process(target=ar_serial).start()
