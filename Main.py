@@ -1,7 +1,7 @@
 # 소프트웨어 동아리 경진대회 Main Python 파일
 # 파일 이름: Object_detection_picamera.py
 # 제작: 장현서(kelvin926@naver.com) / 일산대진고등학교 2학년 '재간둥이'팀
-# 최근 업데이트: 19.11.2 (Ver 1.9)
+# 최근 업데이트: 19.11.2 (Ver 2.0)
 # Original Code Made by Evan(EdjeElectronics)
 
 
@@ -173,7 +173,8 @@ for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port
 
     # 키보드의 Q 버튼을 통해 종료
     if cv2.waitKey(1) == ord('q'):
-        cv2.putText(frame, "WARNING", (0, 100), font, 1, (255, 0, 0), 2, cv2.LINE_AA)
+        src = np.zeros((768, 1366, 3), dtype = np.uint8)
+        cv2.putText(src, "Yeah~", (900, 600), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 255, 255), 3)
         #break
 
     rawCapture.truncate(0)  # 다음 프레임 준비 클리어 작업(?)
