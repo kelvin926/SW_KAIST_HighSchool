@@ -173,9 +173,7 @@ for frame1 in camera.capture_continuous(rawCapture, format="bgr", use_video_port
 
     # 키보드의 Q 버튼을 통해 종료
     if cv2.waitKey(1) == ord('q'):
-        while(1):
-            cv2.putText(frame, "Yeah~", (30, 40), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 3)
-        #break
+        break
 
     rawCapture.truncate(0)  # 다음 프레임 준비 클리어 작업(?)
 
@@ -185,7 +183,20 @@ print('사고가 감지되었습니다.')
 print('119서버와 연결중입니다.')
 
 
+time.sleep(5)
 
+while(1):
+    nfc = ser.readline()
+
+    if nfc == 'on\n':
+        print("hello")
+    elif nfc == 'off\n':
+        print("Bye")
+    else:
+        print("ha..")
+
+
+'''
 def ar_serial():  # 아두이노 시리얼 값 받는 함수
     while(1):
         print(ser.readline())
@@ -195,3 +206,4 @@ if __name__ == '__main__':
     #Process(target=pi_cam).start()
     #time.sleep(5)
     Process(target=ar_serial).start()
+'''
